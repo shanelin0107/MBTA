@@ -219,86 +219,16 @@
 
 <!-- Hero -->
 <header class="hero">
-  <!-- Animated MBTA network map (inline SVG, CSS stroke-dashoffset) -->
-  <div style="position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;filter:saturate(1.8) brightness(1.2);">
-    <svg viewBox="0 0 1200 675" xmlns="http://www.w3.org/2000/svg"
-         style="position:absolute;inset:0;width:100%;height:100%;"
-         preserveAspectRatio="xMidYMid slice">
-      <style>
-        .mbta-line {
-          stroke-dasharray: 1500;
-          stroke-dashoffset: 1500;
-          animation: mbtaDraw 12s ease-in-out infinite;
-          opacity: 0;
-          filter: drop-shadow(0 0 4px currentColor);
-        }
-        .mbta-hub {
-          opacity: 0;
-          animation: mbtaHub 12s ease-in-out infinite;
-        }
-        .l-blue   { stroke:#4B7FE0; animation-delay:0s;   }
-        .l-orange { stroke:#ED8B00; animation-delay:0.7s; }
-        .l-red    { stroke:#E03030; animation-delay:1.4s; }
-        .l-green  { stroke:#00A34A; animation-delay:2.1s; }
-        .l-green2 { stroke:#00A34A; animation-delay:2.5s; }
-        .l-green3 { stroke:#00A34A; animation-delay:2.8s; }
-        .mbta-hub { animation-delay:4.2s; }
-
-        @keyframes mbtaDraw {
-          0%        { stroke-dashoffset:1500; opacity:0;   }
-          6%        { stroke-dashoffset:1500; opacity:0.55;}
-          38%       { stroke-dashoffset:0;    opacity:0.75;}
-          72%       { stroke-dashoffset:0;    opacity:0.75;}
-          88%, 100% { stroke-dashoffset:0;    opacity:0;   }
-        }
-        @keyframes mbtaHub {
-          0%, 34%   { opacity:0; transform:scale(0); }
-          45%       { opacity:0.7; transform:scale(1.15); }
-          55%, 72%  { opacity:0.7; transform:scale(1); }
-          88%, 100% { opacity:0; transform:scale(0); }
-        }
-      </style>
-
-      <!-- Blue Line -->
-      <path class="mbta-line l-blue"
-            d="M530,312 L562,322 L594,344 L668,365 L734,350 L812,312 L876,288"
-            stroke-width="6" fill="none" stroke-linecap="round"/>
-
-      <!-- Orange Line -->
-      <path class="mbta-line l-orange"
-            d="M440,55 L470,203 L520,247 L560,298 L594,344 L566,378 L520,450 L428,584"
-            stroke-width="6" fill="none" stroke-linecap="round"/>
-
-      <!-- Red Line -->
-      <path class="mbta-line l-red"
-            d="M240,68 L386,257 L446,309 L552,371 L566,378 L580,467 L625,550"
-            stroke-width="6" fill="none" stroke-linecap="round"/>
-      <path class="mbta-line l-red"
-            d="M580,467 L682,558"
-            stroke-width="5" fill="none" stroke-linecap="round" style="animation-delay:1.8s"/>
-
-      <!-- Green Line (trunk + branches) -->
-      <path class="mbta-line l-green"
-            d="M660,264 L520,247 L560,298 L552,371 L467,391 L118,378"
-            stroke-width="6" fill="none" stroke-linecap="round"/>
-      <path class="mbta-line l-green2"
-            d="M467,391 L183,410"
-            stroke-width="4" fill="none" stroke-linecap="round"/>
-      <path class="mbta-line l-green3"
-            d="M496,393 L442,545"
-            stroke-width="4" fill="none" stroke-linecap="round"/>
-
-      <!-- Hub stations -->
-      <circle class="mbta-hub" cx="594" cy="344" r="8" fill="none" stroke="white" stroke-width="2.5"
-              style="transform-origin:594px 344px"/>
-      <circle class="mbta-hub" cx="552" cy="371" r="8" fill="none" stroke="white" stroke-width="2.5"
-              style="transform-origin:552px 371px; animation-delay:4.4s"/>
-      <circle class="mbta-hub" cx="566" cy="378" r="8" fill="none" stroke="white" stroke-width="2.5"
-              style="transform-origin:566px 378px; animation-delay:4.6s"/>
-      <circle class="mbta-hub" cx="520" cy="247" r="8" fill="none" stroke="white" stroke-width="2.5"
-              style="transform-origin:520px 247px; animation-delay:4.2s"/>
-    </svg>
-  </div>
+  <!-- Original MBTA animation (iframe) -->
+  <iframe
+    src="assets/mbta-animation.html"
+    style="position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0.85;pointer-events:none;z-index:0;"
+    title="MBTA Network Animation"
+    loading="lazy"
+  ></iframe>
+  <!-- Subtle dark overlay for text readability -->
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(ellipse 90% 80% at 50% 45%, rgba(4,9,16,0.55) 0%, rgba(4,9,16,0.75) 100%);"></div>
 
   <!-- Hero content -->
   <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:1rem;">
