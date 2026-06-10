@@ -51,15 +51,30 @@
     /* ── Hero ── */
     .hero {
       background: #060d14;
-      color: white; padding: 5.5rem 2rem 4.5rem; text-align: center;
+      color: white; padding: 4rem 2rem 4rem; text-align: center;
       position: relative; overflow: hidden;
-      min-height: min(88vh, 720px);
+      min-height: min(92vh, 760px);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1.6rem;
     }
-    /* subtle vignette to keep edges dark and text readable */
+    /* edge vignette only — keep center open so animation shows */
     .hero::before {
       content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
-      background: radial-gradient(ellipse 80% 70% at 50% 42%, transparent 30%, rgba(4,9,16,0.7) 100%);
+      background:
+        linear-gradient(to bottom, rgba(4,9,16,0.85) 0%, transparent 18%, transparent 78%, rgba(4,9,16,0.9) 100%),
+        linear-gradient(to right,  rgba(4,9,16,0.6)  0%, transparent 20%, transparent 80%, rgba(4,9,16,0.6) 100%);
+    }
+    /* Glassmorphism card wrapping the title area */
+    .hero-card {
+      position: relative; z-index: 2;
+      background: rgba(6, 12, 22, 0.55);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      padding: 2.4rem 3.2rem 2rem;
+      max-width: 680px; width: 100%;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
     }
     .hero-tag {
       display: inline-block; background: rgba(255,255,255,0.1);
@@ -79,7 +94,7 @@
     }
 
     /* ── Line Tabs ── */
-    .line-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 2.5rem; }
+    .line-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 0; }
     .line-tab {
       padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 600;
       cursor: pointer; border: 2px solid transparent; transition: all .2s; opacity: 0.75;
@@ -222,7 +237,7 @@
   <!-- Original MBTA animation (iframe) -->
   <iframe
     src="assets/mbta-animation.html"
-    style="position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0.85;pointer-events:none;z-index:0;"
+    style="position:absolute;inset:0;width:100%;height:100%;border:0;opacity:1;pointer-events:none;z-index:0;"
     title="MBTA Network Animation"
     loading="lazy"
   ></iframe>
@@ -231,20 +246,22 @@
     background:radial-gradient(ellipse 90% 80% at 50% 45%, rgba(4,9,16,0.55) 0%, rgba(4,9,16,0.75) 100%);"></div>
 
   <!-- Hero content -->
-  <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;padding-top:1rem;">
-    <div class="hero-tag">Data Analysis · MBTA Subway System</div>
-    <h1>Beyond <span>On-Time</span> Performance</h1>
-    <p>No MBTA line passes 57% on-time. Yet the official metric still overestimates what riders actually experience — by hiding bunching and cascade failures.</p>
+  <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;gap:1.4rem;padding-top:1rem;">
+    <div class="hero-card">
+      <div class="hero-tag">Data Analysis · MBTA Subway System</div>
+      <h1>Beyond <span>On-Time</span> Performance</h1>
+      <p>No MBTA line passes 57% on-time. Yet the official metric still overestimates what riders actually experience — by hiding bunching and cascade failures.</p>
 
-    <div class="line-tabs">
-      <span class="line-tab tab-all active" data-line="all">All Lines</span>
-      <span class="line-tab tab-red"    data-line="red">Red Line</span>
-      <span class="line-tab tab-orange" data-line="orange">Orange Line</span>
-      <span class="line-tab tab-blue"   data-line="blue">Blue Line</span>
-      <span class="line-tab tab-green"  data-line="greenB">Green B</span>
-      <span class="line-tab tab-green"  data-line="greenC">Green C</span>
-      <span class="line-tab tab-green"  data-line="greenD">Green D</span>
-      <span class="line-tab tab-green"  data-line="greenE">Green E</span>
+      <div class="line-tabs">
+        <span class="line-tab tab-all active" data-line="all">All Lines</span>
+        <span class="line-tab tab-red"    data-line="red">Red Line</span>
+        <span class="line-tab tab-orange" data-line="orange">Orange Line</span>
+        <span class="line-tab tab-blue"   data-line="blue">Blue Line</span>
+        <span class="line-tab tab-green"  data-line="greenB">Green B</span>
+        <span class="line-tab tab-green"  data-line="greenC">Green C</span>
+        <span class="line-tab tab-green"  data-line="greenD">Green D</span>
+        <span class="line-tab tab-green"  data-line="greenE">Green E</span>
+      </div>
     </div>
 
     <div class="hero-stats" id="hero-stats">
