@@ -4,7 +4,7 @@
 
 🔗 **[Live Dashboard → shanelin0107.github.io/MBTA](https://shanelin0107.github.io/MBTA/)**
 
-[![MBTA Subway Animation](docs/MBTA-Animation-standalone.html)
+[🚇 MBTA Subway Animation](https://shanelin0107.github.io/MBTA/MBTA-Animation-standalone.html)
 
 ---
 
