@@ -4,6 +4,8 @@
 
 🔗 **[Live Dashboard → shanelin0107.github.io/MBTA](https://shanelin0107.github.io/MBTA/)**
 
+![Dashboard Preview](docs/assets/dashboard_preview.png)
+
 ---
 
 ## The Problem
