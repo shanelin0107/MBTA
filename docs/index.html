@@ -206,25 +206,38 @@
 
 <!-- Hero -->
 <header class="hero">
-  <div class="hero-tag">Data Analysis · MBTA Subway System</div>
-  <h1>Beyond <span>On-Time</span> Performance</h1>
-  <p>No MBTA line passes 57% on-time. Yet the official metric still overestimates what riders actually experience — by hiding bunching and cascade failures.</p>
+  <!-- Animated MBTA map background -->
+  <iframe
+    src="assets/mbta-animation.html"
+    style="position:absolute;inset:0;width:100%;height:100%;border:0;opacity:0.18;pointer-events:none;z-index:0;"
+    title="MBTA Network Animation"
+    loading="lazy"
+  ></iframe>
+  <!-- Green overlay to blend animation with hero gradient -->
+  <div style="position:absolute;inset:0;z-index:1;background:linear-gradient(150deg,rgba(0,32,18,0.72) 0%,rgba(0,56,32,0.60) 55%,rgba(0,132,61,0.45) 100%);pointer-events:none;"></div>
 
-  <div class="line-tabs">
-    <span class="line-tab tab-all active" data-line="all">All Lines</span>
-    <span class="line-tab tab-red"    data-line="red">Red Line</span>
-    <span class="line-tab tab-orange" data-line="orange">Orange Line</span>
-    <span class="line-tab tab-blue"   data-line="blue">Blue Line</span>
-    <span class="line-tab tab-green"  data-line="greenB">Green B</span>
-    <span class="line-tab tab-green"  data-line="greenC">Green C</span>
-    <span class="line-tab tab-green"  data-line="greenD">Green D</span>
-    <span class="line-tab tab-green"  data-line="greenE">Green E</span>
-  </div>
+  <!-- Hero content -->
+  <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;">
+    <div class="hero-tag">Data Analysis · MBTA Subway System</div>
+    <h1>Beyond <span>On-Time</span> Performance</h1>
+    <p>No MBTA line passes 57% on-time. Yet the official metric still overestimates what riders actually experience — by hiding bunching and cascade failures.</p>
 
-  <div class="hero-stats" id="hero-stats">
-    <!-- filled by JS -->
+    <div class="line-tabs">
+      <span class="line-tab tab-all active" data-line="all">All Lines</span>
+      <span class="line-tab tab-red"    data-line="red">Red Line</span>
+      <span class="line-tab tab-orange" data-line="orange">Orange Line</span>
+      <span class="line-tab tab-blue"   data-line="blue">Blue Line</span>
+      <span class="line-tab tab-green"  data-line="greenB">Green B</span>
+      <span class="line-tab tab-green"  data-line="greenC">Green C</span>
+      <span class="line-tab tab-green"  data-line="greenD">Green D</span>
+      <span class="line-tab tab-green"  data-line="greenE">Green E</span>
+    </div>
+
+    <div class="hero-stats" id="hero-stats">
+      <!-- filled by JS -->
+    </div>
+    <div class="line-insight" id="line-insight"></div>
   </div>
-  <div class="line-insight" id="line-insight"></div>
 </header>
 
 <!-- Section 01: Official OTP -->
