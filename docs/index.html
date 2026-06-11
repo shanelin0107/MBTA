@@ -57,14 +57,18 @@
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       gap: 1.6rem;
     }
-    /* edge vignette only — keep center open so animation shows */
+    /* edge vignette — starts hidden, fades in after intro */
     .hero::before {
       content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
       background:
         linear-gradient(to bottom, rgba(4,9,16,0.85) 0%, transparent 18%, transparent 78%, rgba(4,9,16,0.9) 100%),
         linear-gradient(to right,  rgba(4,9,16,0.6)  0%, transparent 20%, transparent 80%, rgba(4,9,16,0.6) 100%);
+      opacity: 0;
+      transition: opacity 0.7s ease;
     }
-    /* Glassmorphism card wrapping the title area */
+    .hero.hero-revealed::before { opacity: 1; }
+
+    /* Glassmorphism card — slides up after intro */
     .hero-card {
       position: relative; z-index: 2;
       background: rgba(6, 12, 22, 0.55);
@@ -75,7 +79,26 @@
       padding: 2.4rem 3.2rem 2rem;
       max-width: 680px; width: 100%;
       box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.9s ease 0.35s, transform 0.9s ease 0.35s;
     }
+    .hero.hero-revealed .hero-card {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Skip intro button */
+    .hero-skip {
+      position: absolute; bottom: 1.6rem; right: 2rem; z-index: 10;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px; padding: 5px 14px;
+      color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 500;
+      cursor: pointer; letter-spacing: 0.4px; font-family: inherit;
+      transition: background 0.2s, color 0.2s, opacity 0.4s;
+    }
+    .hero-skip:hover { background: rgba(255,255,255,0.2); color: white; }
+    .hero.hero-revealed .hero-skip { opacity: 0; pointer-events: none; }
     .hero-tag {
       display: inline-block; background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2); border-radius: 20px;
@@ -119,6 +142,13 @@
       border: 1px solid rgba(255,255,255,0.15);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease 1.0s, transform 0.7s ease 1.0s;
+    }
+    .hero.hero-revealed .hero-stats {
+      opacity: 1;
+      transform: translateY(0);
     }
     .hero-stat {
       padding: 1.4rem 0.8rem; text-align: center;
@@ -244,6 +274,9 @@
   <!-- Subtle dark overlay for text readability -->
   <div style="position:absolute;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(ellipse 90% 80% at 50% 45%, rgba(4,9,16,0.55) 0%, rgba(4,9,16,0.75) 100%);"></div>
+
+  <!-- Skip button -->
+  <button class="hero-skip" id="hero-skip" aria-label="Skip intro">Skip intro ↓</button>
 
   <!-- Hero content -->
   <div style="position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;gap:1.4rem;padding-top:1rem;">
@@ -536,6 +569,23 @@ document.querySelectorAll('.line-tab').forEach(tab => {
   });
 });
 renderStats('all');
+
+/* ── Hero intro: reveal after animation has played ── */
+(function() {
+  var hero = document.querySelector('.hero');
+  var skip = document.getElementById('hero-skip');
+  function revealHero() {
+    hero.classList.add('hero-revealed');
+  }
+  var timer = setTimeout(revealHero, 3000);
+  skip.addEventListener('click', function() {
+    clearTimeout(timer);
+    // remove all transition delays so it snaps in
+    hero.querySelector('.hero-card').style.transitionDelay = '0s';
+    hero.querySelector('.hero-stats').style.transitionDelay = '0s';
+    revealHero();
+  });
+})();
 
 /* ── Chart 1: Official OTP ── */
 Plotly.newPlot('chart-otp', [{
