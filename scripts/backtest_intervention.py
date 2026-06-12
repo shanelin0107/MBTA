@@ -39,7 +39,7 @@ print(f'Loaded model: {model_name}  threshold={THRESHOLD}')
 # ── 2. Rebuild test features ──────────────────────────────────────────────────
 OTP_COLS = ['route_id', 'line', 'parent_station', 'stop_timestamp',
             'scheduled_arrival_time', 'service_date', 'headway_branch_seconds']
-TEST_YM = ['2024-07', '2024-10']
+TEST_YM = [f'2025-{m:02d}' for m in range(1,13)] + [f'2026-{m:02d}' for m in range(1,6)]
 frames = []
 for ym in TEST_YM:
     tmp = pd.read_parquet(PROC_DIR / 'strategic' / f'{ym}.parquet', columns=OTP_COLS)
@@ -69,25 +69,53 @@ station_hour['delay_severity'] = pd.cut(
     station_hour['mean_delay'], bins=[-np.inf,300,600,1200,np.inf], labels=[0,1,2,3]
 ).astype(int)
 
-# ── 3. Label cascade events ────────────────────────────────────────────────────
+# ── 3. Label cascade events (vectorized) ──────────────────────────────────────
 cascade_graph   = pd.read_parquet(PROC_DIR / 'cascade_graph.parquet')
 downstream_dict = cascade_graph.groupby('src')['dst'].apply(set).to_dict()
-delay_hours_lkp = (
-    station_hour[station_hour['is_delay_event']]
-    .groupby(['service_date', 'parent_station'])['hour']
-    .apply(set).to_dict()
+
+delay_events = station_hour[station_hour['is_delay_event']].copy().reset_index(drop=True)
+print(f'Labeling {len(delay_events):,} delay events...')
+
+# Build lookup: (service_date, parent_station) → set of delay hours
+delay_set = (
+    delay_events[['service_date','parent_station','hour']]
+    .groupby(['service_date','parent_station'])['hour']
+    .apply(set)
+    .reset_index()
+    .rename(columns={'hour':'dst_hours', 'parent_station':'dst'})
 )
 
-def is_cascade(row):
-    dsts = downstream_dict.get(row['parent_station'], set())
-    if not dsts: return 0
-    window = set(range(row['hour'], min(row['hour'] + 4, 24)))
-    return int(sum(1 for d in dsts
-                   if delay_hours_lkp.get((row['service_date'], d), set()) & window) >= 2)
+# Expand each source event × each downstream station
+src_df = delay_events[['service_date','parent_station','hour']].copy()
+src_df.columns = ['service_date','src','src_hour']
 
-delay_events = station_hour[station_hour['is_delay_event']].copy()
-print(f'Labeling {len(delay_events):,} delay events...')
-delay_events['cascade'] = delay_events.apply(is_cascade, axis=1)
+# Join with cascade graph to get all (src, dst) pairs
+edges = cascade_graph[['src','dst']].drop_duplicates()
+src_expanded = src_df.merge(edges, on='src', how='inner')
+
+# Join with delay_set to get downstream delay hours
+src_expanded = src_expanded.merge(delay_set, on=['service_date','dst'], how='inner')
+
+# Check: does downstream delay fall within [src_hour, src_hour+4)?
+src_expanded['hit'] = src_expanded.apply(
+    lambda r: bool(r['dst_hours'] & set(range(r['src_hour'], min(r['src_hour']+4, 24)))), axis=1
+)
+
+# Count downstream hits per (service_date, src, src_hour); cascade if >= 2
+hit_counts = (
+    src_expanded[src_expanded['hit']]
+    .groupby(['service_date','src','src_hour'])
+    .size()
+    .reset_index(name='n_hits')
+)
+hit_counts['cascade'] = (hit_counts['n_hits'] >= 2).astype(int)
+
+delay_events = delay_events.merge(
+    hit_counts[['service_date','src','src_hour','cascade']].rename(
+        columns={'src':'parent_station','src_hour':'hour'}),
+    on=['service_date','parent_station','hour'], how='left'
+)
+delay_events['cascade'] = delay_events['cascade'].fillna(0).astype(int)
 print(f'Cascade rate: {delay_events["cascade"].mean():.1%}')
 
 # ── 4. Feature matrix ─────────────────────────────────────────────────────────
@@ -199,7 +227,7 @@ for line in sorted(feat['line'].unique()):
     print(f'  {line:<20} total={n_total:4d}  structural_prevented={n_prev:4d}  ({n_prev/n_total*100:.0f}%)')
 
 # ── 6. ROI estimate ────────────────────────────────────────────────────────────
-months_in_test        = 2
+months_in_test        = len(TEST_YM)
 annualise             = 12 / months_in_test
 avg_stations_cascade  = 8
 avg_delay_min         = 18

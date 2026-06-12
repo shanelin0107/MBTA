@@ -455,13 +455,13 @@
   <div class="container">
     <div class="section-label">Section 08</div>
     <h2 class="section-title">The Fix: Target 5 Stations, Prevent 1 in 5 Cascades</h2>
-    <p class="section-sub">We ran a backtest on held-out data (Jul + Oct 2024): what happens to the cascade prediction model if MBTA isolates the 5 super-spreader stations? The answer is clear — and the problem is simpler than MBTA thinks.</p>
+    <p class="section-sub">Backtest on 17 months of out-of-sample data (Jan 2025 – May 2026): apply the trained cascade model to data it has never seen, then simulate isolating the 5 super-spreader stations.</p>
 
     <div class="insight-box" style="background:linear-gradient(135deg,#fff8e6,#fff3cd);border-color:#ffc107;">
       <strong>What the model proves:</strong>
       Cascade risk is about <em>where</em> a delay starts, not how bad it is.
       Isolating the 5 super-spreader stations (Kenmore, Copley, Government Center, Beaconsfield, Hynes)
-      prevents <strong>19% of all cascade events</strong> system-wide — about <strong>7,584 cascades per year</strong> — without changing any schedule or adding a single staff member.
+      prevents <strong>~20% of all cascade events</strong> system-wide — about <strong>~16,600 cascades per year</strong> — without changing any schedule or adding a single staff member.
     </div>
 
     <!-- Step 1: Map -->
@@ -480,20 +480,16 @@
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
         <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#FA2D27;">6,647</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Total high-risk cascade<br>events (test period)</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#FA2D27;">119,513</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">High-risk cascade events<br>(17-month test period)</div>
         </div>
         <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#00843D;">1,264</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Prevented — 19% of<br>all cascade events</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#00843D;">23,556</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Prevented — 19.7% of<br>all cascade events</div>
         </div>
-        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#FFC72C;">~7,584</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Cascades prevented<br>per year (projected)</div>
-        </div>
-        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#2F5DA6;">~18,202</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Station-hours of delay<br>saved per year</div>
+        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;grid-column:span 2;">
+          <div style="font-size:1.6rem;font-weight:800;color:#FFC72C;">~16,600 / year</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Cascades preventable per year<br>(based on 17-month average rate)</div>
         </div>
       </div>
     </div>
@@ -934,9 +930,9 @@ Plotly.newPlot('chart-spreader-impact', [{
 
 // Chart: Cascade events prevented by line (stacked bar)
 const bpLines   = ['Blue','Green B','Green C','Green D','Green E','Orange','Red'];
-const bpPrev    = [110, 800, 229, 62, 63, 0, 0];
-const bpRemain  = [0, 3339, 874, 133, 533, 235, 269];
-const bpPct     = [100, 19.3, 20.8, 31.8, 10.6, 0, 0];
+const bpPrev    = [1762, 7093, 4646, 7298, 2757, 0, 0];
+const bpRemain  = [0, 28929, 16866, 23876, 20865, 1785, 3636];
+const bpPct     = [100, 19.7, 21.6, 23.4, 11.7, 0, 0];
 Plotly.newPlot('chart-prevention', [
   {
     type:'bar', name:'Prevented by fixing top-5 stations', x:bpLines, y:bpPrev,
