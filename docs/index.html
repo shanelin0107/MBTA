@@ -370,7 +370,7 @@
     </div>
     <div class="chart-grid">
       <div class="card">
-        <div class="card-header"><span class="card-dot" style="background:var(--red)"></span>Official OTP vs Rider Experience Score</div>
+        <div class="card-header"><span class="card-dot" style="background:var(--red)"></span>How Many Points Does Official OTP Overstate Reality?</div>
         <div class="card-body"><div id="chart-gap" style="height:300px"></div></div>
       </div>
       <div class="card">
@@ -771,27 +771,40 @@ Plotly.newPlot('chart-h2', [
 }, PC);
 
 /* ── Chart 5: OTP vs Rider Score ── */
-Plotly.newPlot('chart-gap', [
-  { type:'bar', name:'Official OTP',
-    x:['Red','Orange','Blue','Green B','Green C','Green D','Green E'],
-    y:[40.1,46.8,58.8,38.6,42.0,29.6,32.0],
-    marker:{ color:'#2F5DA6', opacity:0.85 },
-    text:[40.1,46.8,58.8,38.6,42.0,29.6,32.0].map(v=>v+'%'),
-    textposition:'outside', textfont:{ size:10 }, cliponaxis:false,
+/* Gap = Official OTP − Rider Experience Score (how many points OTP overstates reality) */
+Plotly.newPlot('chart-gap', [{
+  type: 'bar',
+  x: ['Red','Orange','Blue','Green B','Green C','Green D','Green E'],
+  y: [0.4, 1.9, 1.4, 8.5, 8.4, 10.4, 9.4],
+  marker: {
+    color: ['#FA2D27','#FD8A03','#2F5DA6','#008150','#008150','#008150','#008150'],
+    line: { color:'white', width:1.5 }
   },
-  { type:'bar', name:'Rider Experience Score',
-    x:['Red','Orange','Blue','Green B','Green C','Green D','Green E'],
-    y:[39.7,44.9,57.4,30.1,33.6,19.2,22.6],
-    marker:{ color:'#FA2D27', opacity:0.85 },
-    text:[39.7,44.9,57.4,30.1,33.6,19.2,22.6].map(v=>v+'%'),
-    textposition:'outside', textfont:{ size:10 }, cliponaxis:false,
-  }
-], {
-  font:FONT, barmode:'group',
-  margin:{ ...M, t:24, b:70 },
-  yaxis:{ title:'Score (%)', range:[0,72], gridcolor:'#eee' },
-  legend:{ orientation:'h', y:-0.28, font:{ size:11 } },
+  text: ['0.4','1.9','1.4','8.5','8.4','<b>10.4</b>','9.4'].map(v=>v+' pt'),
+  textposition: 'outside', textfont:{ size:11 }, cliponaxis:false,
+}], {
+  font: FONT,
+  margin: { ...M, t:32, b:52 },
+  yaxis: { title:'Hidden gap (official OTP − rider score, pts)', range:[0,14], gridcolor:'#eee',
+           ticksuffix:' pt' },
+  xaxis: { tickfont:{ size:11 } },
   plot_bgcolor:'white', paper_bgcolor:'white',
+  annotations:[
+    { x:'Green D', y:10.4, xref:'x', yref:'y',
+      text:'<b>Largest gap</b><br>29.6% official<br>→ 19.2% actual',
+      showarrow:true, arrowhead:2, ax:0, ay:-48,
+      font:{ size:10, color:'#333' },
+      bgcolor:'rgba(255,255,255,0.92)', bordercolor:'#008150', borderwidth:1.5 },
+    { x:'Blue', y:1.4, xref:'x', yref:'y',
+      text:'Blue still has<br>51.9% bunching<br>"on-time"',
+      showarrow:true, arrowhead:2, ax:55, ay:-30,
+      font:{ size:9, color:'#555' },
+      bgcolor:'rgba(255,255,255,0.9)', bordercolor:'#ccc', borderwidth:1 },
+  ],
+  shapes:[{
+    type:'line', x0:-0.5, x1:6.5, y0:0, y1:0,
+    line:{ color:'#ccc', width:1 }
+  }]
 }, PC);
 
 /* ── Chart 6: H5 On-Time Bunching ── */
