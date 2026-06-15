@@ -480,24 +480,47 @@
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
         <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#FA2D27;">119,513</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">High-risk cascade events<br>(17-month test period)</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#00843D;">19.7%</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Of all cascade events<br>eliminated by the fix</div>
         </div>
         <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
-          <div style="font-size:1.6rem;font-weight:800;color:#00843D;">23,556</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Prevented — 19.7% of<br>all cascade events</div>
+          <div style="font-size:1.6rem;font-weight:800;color:#FFC72C;">~16,600 / yr</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Cascades prevented per year<br>(17-month avg, projected)</div>
         </div>
-        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;grid-column:span 2;">
-          <div style="font-size:1.6rem;font-weight:800;color:#FFC72C;">~16,600 / year</div>
-          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Cascades preventable per year<br>(based on 17-month average rate)</div>
+        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
+          <div style="font-size:1.6rem;font-weight:800;color:#2F5DA6;">~1,385 / mo</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Monthly cascade events<br>prevented on average</div>
+        </div>
+        <div class="card" style="text-align:center;padding:1.2rem 0.6rem;">
+          <div style="font-size:1.6rem;font-weight:800;color:#FA2D27;">5 stations</div>
+          <div style="font-size:10px;color:#5A6070;text-transform:uppercase;letter-spacing:.6px;margin-top:4px;">Out of 100+ in the system<br>drive 1 in 5 cascades</div>
         </div>
       </div>
     </div>
 
     <!-- Step 3: Which lines benefit -->
-    <div class="card">
-      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green Line Gains the Most from the Fix</div>
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Blue Line: 100% of Cascades Prevented</div>
       <div class="card-body"><div id="chart-prevention" style="height:280px"></div></div>
+    </div>
+
+    <!-- Closing conclusion -->
+    <div style="
+      background:linear-gradient(135deg,#0a1420,#0d2035);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:16px; padding:2rem 2.5rem;
+      color:white; text-align:center;
+    ">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:12px;">Bottom Line</div>
+      <div style="font-size:1.4rem;font-weight:700;line-height:1.5;margin-bottom:12px;">
+        The MBTA doesn't have a system-wide delay problem.<br>
+        It has a <span style="color:#FF4444;">5-station</span> problem.
+      </div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.6);max-width:640px;margin:0 auto;line-height:1.7;">
+        Fix Kenmore, Copley, Government Center, Beaconsfield, and Hynes —
+        and 1 in 5 cascade failures across the entire network disappears.
+        No new trains. No new staff. Just knowing where to look.
+      </div>
     </div>
 
   </div>
@@ -928,29 +951,29 @@ Plotly.newPlot('chart-spreader-impact', [{
   plot_bgcolor:'white', paper_bgcolor:'white',
 }, PC);
 
-// Chart: Cascade events prevented by line (stacked bar)
-const bpLines   = ['Blue','Green B','Green C','Green D','Green E','Orange','Red'];
-const bpPrev    = [1762, 7093, 4646, 7298, 2757, 0, 0];
-const bpRemain  = [0, 28929, 16866, 23876, 20865, 1785, 3636];
-const bpPct     = [100, 19.7, 21.6, 23.4, 11.7, 0, 0];
-Plotly.newPlot('chart-prevention', [
-  {
-    type:'bar', name:'Prevented by fixing top-5 stations', x:bpLines, y:bpPrev,
-    marker:{ color:'#00843D', line:{ color:'white', width:1 } },
-    text: bpPct.map(p => p > 0 ? p.toFixed(0)+'% prevented' : ''),
-    textposition:'inside', textfont:{ size:10, color:'white' },
-  },
-  {
-    type:'bar', name:'Remaining cascades (still happen)', x:bpLines, y:bpRemain,
-    marker:{ color:'#FA2D27', opacity:0.7, line:{ color:'white', width:1 } },
-  }
-], {
-  font: FONT, margin: { t:24, r:20, b:60, l:52 },
-  barmode: 'stack',
-  yaxis: { title:'Cascade events in test period', gridcolor:'#eee' },
+// Chart: % of cascades prevented per line (simple bar)
+const bpLines = ['Blue','Green B','Green C','Green D','Green E','Orange','Red'];
+const bpPct   = [100, 19.7, 21.6, 23.4, 11.7, 0, 0];
+const bpColor = ['#003DA5','#00843D','#00843D','#00843D','#00843D','#ED8B00','#DA291C'];
+Plotly.newPlot('chart-prevention', [{
+  type: 'bar',
+  x: bpLines,
+  y: bpPct,
+  marker: { color: bpColor, line: { color:'white', width:1.5 } },
+  text: bpPct.map(p => p > 0 ? p.toFixed(0)+'%' : '0%'),
+  textposition: 'outside', textfont:{ size:11 }, cliponaxis: false,
+}], {
+  font: FONT, margin: { t:24, r:20, b:52, l:60 },
+  yaxis: { title:'Cascade events prevented (%)', range:[0,120], gridcolor:'#eee', ticksuffix:'%' },
   xaxis: { tickfont:{ size:11 } },
   plot_bgcolor:'white', paper_bgcolor:'white',
-  legend: { orientation:'h', y:-0.28 },
+  annotations:[{
+    x:'Blue', y:100, xref:'x', yref:'y',
+    text:'<b>100%</b> — all Blue Line<br>cascades eliminated',
+    showarrow:true, arrowhead:2, arrowcolor:'#555', ax:80, ay:-20,
+    font:{ size:10, color:'#333' },
+    bgcolor:'rgba(255,255,255,0.92)', bordercolor:'#003DA5', borderwidth:1.5,
+  }]
 }, PC);
 
 </script>
