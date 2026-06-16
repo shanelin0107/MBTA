@@ -135,7 +135,9 @@ for i, row in top5_sorted.iterrows():
             f"<div style='font-size:16px;font-weight:800;margin-bottom:8px'>{row['stop_name']}</div>"
             f"<div style='font-size:12px;color:#444;margin-bottom:4px'>Cascades to <b>{int(row['out_degree'])} downstream stations</b></div>"
             f"<div style='font-size:12px;color:#444'>Lines: {row.get('lines','').replace(',', ', ')}</div>"
-            f"</div>",
+            + (f"<div style='font-size:12px;color:#003DA5;margin-top:4px;font-weight:600'>Also on Blue Line — delays here affect Blue Line service</div>"
+               if row['parent_station'] == 'place-gover' else "")
+            + f"</div>",
             max_width=220
         ),
     ).add_to(m)
@@ -256,7 +258,7 @@ for _, row in red_key.iterrows():
                 text-shadow:0 0 6px #000,0 0 10px #000;
                 white-space:nowrap;pointer-events:none;
             ">{row['stop_name']}<br>
-            <span style='font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)'>Red · betweenness 0.560</span>
+            <span style='font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)'>Red · → {int(row['out_degree'])} stations</span>
             </div>""",
             icon_size=(160, 30), icon_anchor=(0, 0),
         )

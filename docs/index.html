@@ -461,12 +461,12 @@
       <strong>What the model proves:</strong>
       Cascade risk is about <em>where</em> a delay starts, not how bad it is.
       Isolating the 5 super-spreader stations (Kenmore, Copley, Government Center, Beaconsfield, Hynes)
-      prevents <strong>~20% of all cascade events</strong> system-wide — about <strong>~16,600 cascades per year</strong> — without changing any schedule or adding a single staff member.
+      prevents <strong>19.7% of all cascade events</strong> system-wide — about <strong>~16,600 cascades per year</strong> — without changing any schedule or adding a single staff member.
     </div>
 
     <!-- Step 1: Map -->
     <div class="card" style="margin-bottom:1.5rem;">
-      <div class="card-header"><span class="card-dot" style="background:#FF4444"></span>Step 1 — Where Are They? 8 Key Stations Drive Cascades Across All 4 Lines</div>
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 1 — Where Are They? 5 Green Intervention Targets + Key Stations They Impact on Other Lines</div>
       <div class="card-body" style="padding:0;">
         <iframe src="assets/spreader_map.html" style="width:100%;height:480px;border:0;border-radius:0 0 12px 12px;" loading="lazy"></iframe>
       </div>
@@ -500,11 +500,11 @@
 
     <!-- Step 3: Which lines benefit -->
     <div class="card" style="margin-bottom:1.5rem;">
-      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green, Orange &amp; Blue Lines All See Preventable Cascades</div>
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green &amp; Blue Lines Account for All Preventable Cascades</div>
       <div class="card-body">
         <div id="chart-prevention" style="height:280px"></div>
         <p style="font-size:11px;color:#888;margin-top:8px;padding:0 4px;">
-          * Red Line cascades propagate through Park Street (a Green–Red transfer hub). Due to data limitations in the targeted backtest, Red Line counts are not quantified here and are excluded from the chart.
+          * Orange and Red Lines: the model finds 0 preventable cascade events from fixing these 5 stations — delays at North Station, Haymarket, and Park Street are received from the Green Line network but do not statistically propagate further into the Orange or Red Line systems.
         </p>
       </div>
     </div>
@@ -524,8 +524,9 @@
       <div style="font-size:13px;color:rgba(255,255,255,0.6);max-width:640px;margin:0 auto;line-height:1.7;">
         Fix Kenmore, Copley, Government Center, Beaconsfield, and Hynes —
         and 1 in 5 cascade failures across the entire network disappears.
-        Because these stations are shared transfer hubs, their delays don't stay on the Green Line —
-        they ripple outward to the Blue, Orange, and Red lines too.
+        Because Government Center sits at the junction with the Blue Line,
+        its Green Line cascades count as Blue Line disruptions too —
+        all 1,762 of them preventable with a single structural fix.
         No new trains. No new staff. Just knowing where to look.
       </div>
     </div>
@@ -959,10 +960,10 @@ Plotly.newPlot('chart-spreader-impact', [{
 }, PC);
 
 // Chart: Cascade events prevented — Green Line branches only
-const bpLines = ['Green B','Green C','Green D','Green E','Orange','Blue'];
-const bpPrev  = [7093, 4646, 7298, 2757, 1104, 1762];
-const bpLabel = ['7,093','4,646','7,298','2,757','1,104','1,762'];
-const bpColors = ['#00843D','#00843D','#00843D','#00843D','#ED8B00','#003DA5'];
+const bpLines = ['Green B','Green C','Green D','Green E','Blue'];
+const bpPrev  = [7093, 4646, 7298, 2757, 1762];
+const bpLabel = ['7,093','4,646','7,298','2,757','1,762'];
+const bpColors = ['#00843D','#00843D','#00843D','#00843D','#003DA5'];
 Plotly.newPlot('chart-prevention', [{
   type: 'bar',
   x: bpLines,
