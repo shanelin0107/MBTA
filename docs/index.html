@@ -500,8 +500,13 @@
 
     <!-- Step 3: Which lines benefit -->
     <div class="card" style="margin-bottom:1.5rem;">
-      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green Line Is the Biggest Winner</div>
-      <div class="card-body"><div id="chart-prevention" style="height:280px"></div></div>
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green Line Accounts for 93% of All Preventable Cascades</div>
+      <div class="card-body">
+        <div id="chart-prevention" style="height:280px"></div>
+        <p style="font-size:11px;color:#888;margin-top:8px;padding:0 4px;">
+          * Blue Line: 100% of its 1,762 cascade events are prevented — all originate via Government Center transfers. Small sample; not shown on chart to avoid distorting scale. Orange and Red Line cascades are unrelated to these 5 stations.
+        </p>
+      </div>
     </div>
 
     <!-- Closing conclusion -->
@@ -951,29 +956,28 @@ Plotly.newPlot('chart-spreader-impact', [{
   plot_bgcolor:'white', paper_bgcolor:'white',
 }, PC);
 
-// Chart: Absolute cascade events prevented per line
-const bpLines = ['Blue','Green B','Green C','Green D','Green E','Orange','Red'];
-const bpPrev  = [1762, 7093, 4646, 7298, 2757, 0, 0];
-const bpColor = ['#003DA5','#00843D','#00843D','#00843D','#00843D','#ED8B00','#DA291C'];
-const bpLabel = ['1,762','7,093','4,646','7,298','2,757','0','0'];
+// Chart: Cascade events prevented — Green Line branches only
+const bpLines = ['Green B','Green C','Green D','Green E'];
+const bpPrev  = [7093, 4646, 7298, 2757];
+const bpLabel = ['7,093','4,646','7,298','2,757'];
 Plotly.newPlot('chart-prevention', [{
   type: 'bar',
   x: bpLines,
   y: bpPrev,
-  marker: { color: bpColor, line: { color:'white', width:1.5 } },
+  marker: { color:'#00843D', line: { color:'white', width:1.5 } },
   text: bpLabel,
-  textposition: 'outside', textfont:{ size:11 }, cliponaxis: false,
+  textposition: 'outside', textfont:{ size:12 }, cliponaxis: false,
 }], {
   font: FONT, margin: { t:24, r:20, b:52, l:65 },
   yaxis: { title:'Cascade events prevented (17-month test period)', range:[0,9000], gridcolor:'#eee' },
-  xaxis: { tickfont:{ size:11 } },
+  xaxis: { tickfont:{ size:13 } },
   plot_bgcolor:'white', paper_bgcolor:'white',
   annotations:[
     { x:'Green D', y:7298, xref:'x', yref:'y',
-      text:'<b>7,298</b> — Green D<br>largest beneficiary',
-      showarrow:true, arrowhead:2, arrowcolor:'#555', ax:90, ay:-15,
-      font:{ size:10, color:'#333' },
-      bgcolor:'rgba(255,255,255,0.92)', bordercolor:'#00843D', borderwidth:1.5 },
+      text:'Green D + Green B<br>together: <b>14,391 prevented</b>',
+      showarrow:false, xanchor:'center', yanchor:'bottom', yshift:32,
+      font:{ size:10, color:'#555' },
+      bgcolor:'rgba(255,255,255,0.9)', bordercolor:'#00843D', borderwidth:1 },
   ]
 }, PC);
 
