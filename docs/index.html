@@ -473,19 +473,10 @@
       <div class="card-body">
         <p style="font-size:12px;color:#5A6070;margin-bottom:12px;">
           Average predicted cascade probability (0–1) for each super-spreader station across the day.
-          <strong>Before fix</strong> = model's current prediction &nbsp;|&nbsp;
-          <strong>After fix</strong> = simulated outcome when the 5 stations are structurally isolated.
+          Darker = higher risk. The model flags <strong>evening rush (16–19h)</strong> as the highest-risk window system-wide.
+          These predictions are made <em>before</em> a cascade occurs — giving operators a 1–4 hour window to intervene.
         </p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#FA2D27;text-align:center;margin-bottom:6px;">BEFORE — Current Cascade Risk</div>
-            <div id="chart-heatmap-before" style="height:220px"></div>
-          </div>
-          <div>
-            <div style="font-size:11px;font-weight:700;color:#00843D;text-align:center;margin-bottom:6px;">AFTER — With Structural Intervention</div>
-            <div id="chart-heatmap-after" style="height:220px"></div>
-          </div>
-        </div>
+        <div id="chart-heatmap-before" style="height:260px"></div>
       </div>
     </div>
 
@@ -1013,15 +1004,7 @@ fetch('assets/risk_heatmap.json')
     const stations = d.stations.map((s,i) => `#${i+1} ${s}`);
     const hours    = d.hours.map(h => `${h}:00`);
 
-    const hmLayout = {
-      font: FONT,
-      margin: { t:10, r:10, b:52, l:130 },
-      xaxis: { tickangle: -45, tickfont:{ size:9 } },
-      yaxis: { tickfont:{ size:10 }, autorange:'reversed' },
-      plot_bgcolor:'white', paper_bgcolor:'white',
-    };
-
-    // Before — red-orange scale
+    // Before — red-orange scale, full width with peak annotation
     Plotly.newPlot('chart-heatmap-before', [{
       type: 'heatmap',
       z: d.prob_actual,
@@ -1036,26 +1019,32 @@ fetch('assets/risk_heatmap.json')
       ],
       zmin: 0, zmax: 1,
       colorbar: { title:'P(cascade)', thickness:12, len:0.8, tickfont:{size:9} },
-      hovertemplate: '<b>%{y}</b><br>%{x}<br>Risk: %{z:.2f}<extra></extra>',
-    }], hmLayout, PC);
+      hovertemplate: '<b>%{y}</b><br>%{x}<br>P(cascade): %{z:.2f}<extra></extra>',
+    }], {
+      font: FONT,
+      margin: { t:36, r:80, b:52, l:170 },
+      xaxis: { tickangle: -45, tickfont:{ size:10 } },
+      yaxis: { tickfont:{ size:11 }, autorange:'reversed' },
+      plot_bgcolor:'white', paper_bgcolor:'white',
+      shapes:[{
+        type:'rect', xref:'x', yref:'paper',
+        x0: peakX0, x1: peakX1, y0:0, y1:1,
+        fillcolor:'rgba(250,45,39,0.08)',
+        line:{ color:'rgba(250,45,39,0.4)', width:1.5, dash:'dot' },
+      }],
+      annotations:[{
+        x: '17:00', y: -0.22, xref:'x', yref:'paper',
+        text:'⚠ Peak risk window', showarrow:false,
+        font:{ size:10, color:'#c0392b' }, xanchor:'center',
+      }],
+    }, PC);
 
-    // After — green scale
-    Plotly.newPlot('chart-heatmap-after', [{
-      type: 'heatmap',
-      z: d.prob_structural,
-      x: hours,
-      y: stations,
-      colorscale: [
-        [0,   '#f7f7f7'],
-        [0.3, '#c7e9c0'],
-        [0.6, '#41ab5d'],
-        [0.85,'#006d2c'],
-        [1,   '#00441b'],
-      ],
-      zmin: 0, zmax: 1,
-      colorbar: { title:'P(cascade)', thickness:12, len:0.8, tickfont:{size:9} },
-      hovertemplate: '<b>%{y}</b><br>%{x}<br>Risk: %{z:.2f}<extra></extra>',
-    }], hmLayout, PC);
+    // Peak risk annotation band (16-19h)
+    const peakIdx16 = d.hours.indexOf(16);
+    const peakIdx19 = d.hours.indexOf(19);
+    const peakX0 = hours[peakIdx16];
+    const peakX1 = hours[peakIdx19];
+
   });
 
 /* ── Section 08: Intervention Backtest Charts ── */

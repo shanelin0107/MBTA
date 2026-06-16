@@ -119,6 +119,8 @@ is_spreader = feat['parent_station'].isin(top_spreaders).values
 X_structural.loc[is_spreader, 'granger_out_degree'] = 0
 X_structural.loc[is_spreader, 'betweenness']        = 0
 feat['prob_structural'] = model.predict_proba(X_structural)[:, 1]
+feat['pred_actual']     = (feat['prob_actual']     >= THRESHOLD).astype(int)
+feat['pred_structural'] = (feat['prob_structural'] >= THRESHOLD).astype(int)
 
 # ── Build heatmap: avg probability by (station × hour) ────────────────────────
 spreader_feat = feat[feat['parent_station'].isin(top_spreaders)].copy()
@@ -131,26 +133,31 @@ station_order = [name_map.get(s, s) for s in ordered['parent_station']]
 
 HOURS = list(range(5, 24))  # 5am to 11pm
 
-heatmap_actual     = []
-heatmap_structural = []
-
+heatmap_actual = []
 for sid in ordered['parent_station']:
-    sname = name_map.get(sid, sid)
     sub = spreader_feat[spreader_feat['parent_station'] == sid]
-    row_a, row_s = [], []
+    row = []
     for h in HOURS:
         h_sub = sub[sub['hour'] == h]
-        row_a.append(round(float(h_sub['prob_actual'].mean()), 4) if len(h_sub) > 0 else 0.0)
-        row_s.append(round(float(h_sub['prob_structural'].mean()), 4) if len(h_sub) > 0 else 0.0)
-    heatmap_actual.append(row_a)
-    heatmap_structural.append(row_s)
+        row.append(round(float(h_sub['prob_actual'].mean()), 4) if len(h_sub) > 0 else 0.0)
+    heatmap_actual.append(row)
+
+# ── Cascade events prevented per hour-of-day (across all spreader stations) ───
+# "Prevented" = model predicted cascade before intervention but not after
+prevented_mask = (feat['pred_actual'] == 1) & (feat['pred_structural'] == 0) & feat['parent_station'].isin(top_spreaders)
+prevented_by_hour = feat[prevented_mask].groupby('hour').size().reindex(HOURS, fill_value=0).tolist()
+
+print('\nCascade events prevented by hour:')
+for h, n in zip(HOURS, prevented_by_hour):
+    bar = '█' * (n // 50)
+    print(f'  {h:02d}h  {n:5d}  {bar}')
 
 # ── Output ─────────────────────────────────────────────────────────────────────
 out = {
     'stations': station_order,
     'hours': HOURS,
     'prob_actual': heatmap_actual,
-    'prob_structural': heatmap_structural,
+    'prevented_by_hour': prevented_by_hour,
 }
 
 with open(OUT_PATH, 'w') as f:
