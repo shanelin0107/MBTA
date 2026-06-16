@@ -500,11 +500,11 @@
 
     <!-- Step 3: Which lines benefit -->
     <div class="card" style="margin-bottom:1.5rem;">
-      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green Line Accounts for 93% of All Preventable Cascades</div>
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green, Orange &amp; Blue Lines All See Preventable Cascades</div>
       <div class="card-body">
         <div id="chart-prevention" style="height:280px"></div>
         <p style="font-size:11px;color:#888;margin-top:8px;padding:0 4px;">
-          * Blue Line: 100% of its 1,762 cascade events trace through Government Center (a Green–Blue transfer hub) — so all are technically prevented by fixing these 5 stations. Small sample; not shown to avoid distorting scale. Orange Line cascades propagate through North Station and Haymarket; Red Line through Park Street — these 3 stations are shown on the map above but are separate from the 5 Green Line super-spreaders tracked here.
+          * Red Line cascades propagate through Park Street (a Green–Red transfer hub). Due to data limitations in the targeted backtest, Red Line counts are not quantified here and are excluded from the chart.
         </p>
       </div>
     </div>
@@ -959,14 +959,15 @@ Plotly.newPlot('chart-spreader-impact', [{
 }, PC);
 
 // Chart: Cascade events prevented — Green Line branches only
-const bpLines = ['Green B','Green C','Green D','Green E'];
-const bpPrev  = [7093, 4646, 7298, 2757];
-const bpLabel = ['7,093','4,646','7,298','2,757'];
+const bpLines = ['Green B','Green C','Green D','Green E','Orange','Blue'];
+const bpPrev  = [7093, 4646, 7298, 2757, 1104, 1762];
+const bpLabel = ['7,093','4,646','7,298','2,757','1,104','1,762'];
+const bpColors = ['#00843D','#00843D','#00843D','#00843D','#ED8B00','#003DA5'];
 Plotly.newPlot('chart-prevention', [{
   type: 'bar',
   x: bpLines,
   y: bpPrev,
-  marker: { color:'#00843D', line: { color:'white', width:1.5 } },
+  marker: { color: bpColors, line: { color:'white', width:1.5 } },
   text: bpLabel,
   textposition: 'outside', textfont:{ size:12 }, cliponaxis: false,
 }], {
