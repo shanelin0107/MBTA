@@ -1001,10 +1001,14 @@ spreaders.forEach(d => {
 fetch('assets/risk_heatmap.json')
   .then(r => r.json())
   .then(d => {
-    const stations = d.stations.map((s,i) => `#${i+1} ${s}`);
-    const hours    = d.hours.map(h => `${h}:00`);
+    const stations   = d.stations.map((s,i) => `#${i+1} ${s}`);
+    const hours      = d.hours.map(h => `${h}:00`);
+    const peakIdx16  = d.hours.indexOf(16);
+    const peakIdx19  = d.hours.indexOf(19);
+    const peakX0     = hours[peakIdx16];
+    const peakX1     = hours[peakIdx19];
 
-    // Before — red-orange scale, full width with peak annotation
+    // Heatmap — red-orange scale, full width with peak annotation
     Plotly.newPlot('chart-heatmap-before', [{
       type: 'heatmap',
       z: d.prob_actual,
@@ -1038,12 +1042,6 @@ fetch('assets/risk_heatmap.json')
         font:{ size:10, color:'#c0392b' }, xanchor:'center',
       }],
     }, PC);
-
-    // Peak risk annotation band (16-19h)
-    const peakIdx16 = d.hours.indexOf(16);
-    const peakIdx19 = d.hours.indexOf(19);
-    const peakX0 = hours[peakIdx16];
-    const peakX1 = hours[peakIdx19];
 
   });
 
