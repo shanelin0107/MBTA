@@ -97,7 +97,8 @@ for _, row in merged.iterrows():
     ).add_to(m)
 
 # ── Draw Green Line top-5 super-spreaders ─────────────────────────────────────
-RANK_COLORS = ['#FF4444', '#FF6B00', '#FFA500', '#FFD700', '#FFEE88']
+# Dark → bright green gradient: rank 1 (most impactful) → rank 5
+RANK_COLORS = ['#004d1f', '#006b2c', '#008c3a', '#00aa46', '#33c568']
 top5_sorted = top5.sort_values('out_degree', ascending=False).reset_index(drop=True)
 
 for i, row in top5_sorted.iterrows():
@@ -276,7 +277,7 @@ legend_html = """
   <div>
     <div style='font-weight:700;font-size:12px;margin-bottom:6px;color:rgba(255,255,255,0.9)'>System-Wide Cascade Risk Stations</div>
     <div style='display:flex;gap:12px;'>
-      <span style='color:#FF4444;font-weight:700'>● Green Line Top 5</span>
+      <span style='color:#00C450;font-weight:700'>● Green Line Top 5</span>
       <span style='color:#ED8B00;font-weight:700'>● Orange Line</span>
       <span style='color:#DA291C;font-weight:700'>● Red Line</span>
     </div>
