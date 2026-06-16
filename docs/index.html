@@ -464,6 +464,31 @@
       prevents <strong>19.7% of all cascade events</strong> system-wide — about <strong>~16,600 cascades per year</strong> — without changing any schedule or adding a single staff member.
     </div>
 
+    <!-- Step 0: Cascade Risk Heatmap -->
+    <div class="card" style="margin-bottom:1.5rem;">
+      <div class="card-header">
+        <span class="card-dot" style="background:#FA2D27"></span>
+        Step 0 — What the Model Predicts: Cascade Risk by Station &amp; Hour
+      </div>
+      <div class="card-body">
+        <p style="font-size:12px;color:#5A6070;margin-bottom:12px;">
+          Average predicted cascade probability (0–1) for each super-spreader station across the day.
+          <strong>Before fix</strong> = model's current prediction &nbsp;|&nbsp;
+          <strong>After fix</strong> = simulated outcome when the 5 stations are structurally isolated.
+        </p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#FA2D27;text-align:center;margin-bottom:6px;">BEFORE — Current Cascade Risk</div>
+            <div id="chart-heatmap-before" style="height:220px"></div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#00843D;text-align:center;margin-bottom:6px;">AFTER — With Structural Intervention</div>
+            <div id="chart-heatmap-after" style="height:220px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Step 1: Map -->
     <div class="card" style="margin-bottom:1.5rem;">
       <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 1 — Where Are They? 5 Green Intervention Targets + Key Stations They Impact on Other Lines</div>
@@ -514,20 +539,62 @@
       background:linear-gradient(135deg,#0a1420,#0d2035);
       border:1px solid rgba(255,255,255,0.1);
       border-radius:16px; padding:2rem 2.5rem;
-      color:white; text-align:center;
+      color:white;
     ">
-      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:12px;">Bottom Line</div>
-      <div style="font-size:1.4rem;font-weight:700;line-height:1.5;margin-bottom:12px;">
-        The MBTA doesn't have a system-wide delay problem.<br>
-        It has a <span style="color:#FF4444;">5-station</span> problem.
-      </div>
-      <div style="font-size:13px;color:rgba(255,255,255,0.6);max-width:640px;margin:0 auto;line-height:1.7;">
-        Fix Kenmore, Copley, Government Center, Beaconsfield, and Hynes —
-        and 1 in 5 cascade failures across the entire network disappears.
-        Because Government Center sits at the junction with the Blue Line,
-        its Green Line cascades count as Blue Line disruptions too —
-        all 1,762 of them preventable with a single structural fix.
-        No new trains. No new staff. Just knowing where to look.
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:16px;text-align:center;">Key Findings &amp; Recommendations</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+
+        <!-- Findings -->
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#00C450;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Findings</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#00C450;font-size:14px;flex-shrink:0;margin-top:1px;">✦</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">No MBTA line clears 57% on-time — and official OTP systematically <em>overstates</em> service quality by ignoring train bunching</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#00C450;font-size:14px;flex-shrink:0;margin-top:1px;">✦</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">Train bunching creates crowding invisible to official metrics — large headway gaps predict longer dwell times, a direct crowding signal</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#00C450;font-size:14px;flex-shrink:0;margin-top:1px;">✦</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">Cascade risk is <em>structural, not operational</em> — reducing delay severity has near-zero effect; it's about <em>where</em> a delay starts</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#00C450;font-size:14px;flex-shrink:0;margin-top:1px;">✦</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">5 Green Line stations (out of 100+) drive <strong style="color:white;">19.7%</strong> of all cascades — enabled by the 4-branch shared-trunk architecture unique to the Green Line</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#00C450;font-size:14px;flex-shrink:0;margin-top:1px;">✦</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;">Red, Orange &amp; Blue lines have no internal cascade structure — their delay patterns are localized and non-propagating</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Recommendations -->
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#FFC72C;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;">Recommendations</div>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#FFC72C;font-size:14px;flex-shrink:0;margin-top:1px;">→</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;"><strong style="color:white;">Deploy real-time cascade alerts</strong> at the 5 super-spreader stations — the model predicts risk 1–4 hours before impact, giving operators an intervention window</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#FFC72C;font-size:14px;flex-shrink:0;margin-top:1px;">→</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;"><strong style="color:white;">Use short-turning at Kenmore and Copley</strong> during high-risk hours to prevent bunched trains from entering the shared B/C/D/E trunk</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#FFC72C;font-size:14px;flex-shrink:0;margin-top:1px;">→</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;"><strong style="color:white;">Enforce minimum headway spacing</strong> proactively at Government Center and Hynes — bunching at these hubs is the primary cascade trigger</span>
+            </li>
+            <li style="display:flex;gap:10px;align-items:flex-start;">
+              <span style="color:#FFC72C;font-size:14px;flex-shrink:0;margin-top:1px;">→</span>
+              <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:1.5;"><strong style="color:white;">Expand OTP reporting</strong> to include bunching frequency and cascade rate alongside on-time percentage — current KPIs hide the real rider experience</span>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </div>
 
@@ -938,6 +1005,58 @@ spreaders.forEach(d => {
       <div class="spreader-bar"><div class="spreader-fill" style="width:${d.score*100}%"></div></div>
     </div>`;
 });
+
+/* ── Section 08: Step 0 — Cascade Risk Heatmap ── */
+fetch('assets/risk_heatmap.json')
+  .then(r => r.json())
+  .then(d => {
+    const stations = d.stations.map((s,i) => `#${i+1} ${s}`);
+    const hours    = d.hours.map(h => `${h}:00`);
+
+    const hmLayout = {
+      font: FONT,
+      margin: { t:10, r:10, b:52, l:130 },
+      xaxis: { tickangle: -45, tickfont:{ size:9 } },
+      yaxis: { tickfont:{ size:10 }, autorange:'reversed' },
+      plot_bgcolor:'white', paper_bgcolor:'white',
+    };
+
+    // Before — red-orange scale
+    Plotly.newPlot('chart-heatmap-before', [{
+      type: 'heatmap',
+      z: d.prob_actual,
+      x: hours,
+      y: stations,
+      colorscale: [
+        [0,   '#f7f7f7'],
+        [0.3, '#fdd49e'],
+        [0.6, '#fc8d59'],
+        [0.85,'#d7301f'],
+        [1,   '#7f0000'],
+      ],
+      zmin: 0, zmax: 1,
+      colorbar: { title:'P(cascade)', thickness:12, len:0.8, tickfont:{size:9} },
+      hovertemplate: '<b>%{y}</b><br>%{x}<br>Risk: %{z:.2f}<extra></extra>',
+    }], hmLayout, PC);
+
+    // After — green scale
+    Plotly.newPlot('chart-heatmap-after', [{
+      type: 'heatmap',
+      z: d.prob_structural,
+      x: hours,
+      y: stations,
+      colorscale: [
+        [0,   '#f7f7f7'],
+        [0.3, '#c7e9c0'],
+        [0.6, '#41ab5d'],
+        [0.85,'#006d2c'],
+        [1,   '#00441b'],
+      ],
+      zmin: 0, zmax: 1,
+      colorbar: { title:'P(cascade)', thickness:12, len:0.8, tickfont:{size:9} },
+      hovertemplate: '<b>%{y}</b><br>%{x}<br>Risk: %{z:.2f}<extra></extra>',
+    }], hmLayout, PC);
+  });
 
 /* ── Section 08: Intervention Backtest Charts ── */
 
