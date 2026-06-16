@@ -500,7 +500,7 @@
 
     <!-- Step 3: Which lines benefit -->
     <div class="card" style="margin-bottom:1.5rem;">
-      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Blue Line: 100% of Cascades Prevented</div>
+      <div class="card-header"><span class="card-dot" style="background:#00843D"></span>Step 3 — Which Lines Benefit? Green Line Is the Biggest Winner</div>
       <div class="card-body"><div id="chart-prevention" style="height:280px"></div></div>
     </div>
 
@@ -951,29 +951,30 @@ Plotly.newPlot('chart-spreader-impact', [{
   plot_bgcolor:'white', paper_bgcolor:'white',
 }, PC);
 
-// Chart: % of cascades prevented per line (simple bar)
+// Chart: Absolute cascade events prevented per line
 const bpLines = ['Blue','Green B','Green C','Green D','Green E','Orange','Red'];
-const bpPct   = [100, 19.7, 21.6, 23.4, 11.7, 0, 0];
+const bpPrev  = [1762, 7093, 4646, 7298, 2757, 0, 0];
 const bpColor = ['#003DA5','#00843D','#00843D','#00843D','#00843D','#ED8B00','#DA291C'];
+const bpLabel = ['1,762','7,093','4,646','7,298','2,757','0','0'];
 Plotly.newPlot('chart-prevention', [{
   type: 'bar',
   x: bpLines,
-  y: bpPct,
+  y: bpPrev,
   marker: { color: bpColor, line: { color:'white', width:1.5 } },
-  text: bpPct.map(p => p > 0 ? p.toFixed(0)+'%' : '0%'),
+  text: bpLabel,
   textposition: 'outside', textfont:{ size:11 }, cliponaxis: false,
 }], {
-  font: FONT, margin: { t:24, r:20, b:52, l:60 },
-  yaxis: { title:'Cascade events prevented (%)', range:[0,120], gridcolor:'#eee', ticksuffix:'%' },
+  font: FONT, margin: { t:24, r:20, b:52, l:65 },
+  yaxis: { title:'Cascade events prevented (17-month test period)', range:[0,9000], gridcolor:'#eee' },
   xaxis: { tickfont:{ size:11 } },
   plot_bgcolor:'white', paper_bgcolor:'white',
-  annotations:[{
-    x:'Blue', y:100, xref:'x', yref:'y',
-    text:'<b>100%</b> — all Blue Line<br>cascades eliminated',
-    showarrow:true, arrowhead:2, arrowcolor:'#555', ax:80, ay:-20,
-    font:{ size:10, color:'#333' },
-    bgcolor:'rgba(255,255,255,0.92)', bordercolor:'#003DA5', borderwidth:1.5,
-  }]
+  annotations:[
+    { x:'Green D', y:7298, xref:'x', yref:'y',
+      text:'<b>7,298</b> — Green D<br>largest beneficiary',
+      showarrow:true, arrowhead:2, arrowcolor:'#555', ax:90, ay:-15,
+      font:{ size:10, color:'#333' },
+      bgcolor:'rgba(255,255,255,0.92)', bordercolor:'#00843D', borderwidth:1.5 },
+  ]
 }, PC);
 
 </script>
