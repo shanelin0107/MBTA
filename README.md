@@ -22,7 +22,7 @@ This project quantifies both — and builds a **Rider Experience Score** that re
 
 ## Live Dashboard
 
-> 7 interactive sections built with Plotly — no server required.
+> 8 interactive sections built with Plotly — no server required.
 
 | Section | Content |
 |---|---|
@@ -33,6 +33,7 @@ This project quantifies both — and builds a **Rider Experience Score** that re
 | 05 | Cascade case study — Aug 10, 2022 |
 | 06 | Super-spreader stations (Granger causality) |
 | 07 | Research hypotheses summary |
+| 08 | ML cascade risk model: predictions + structural intervention backtest |
 
 ---
 
@@ -44,6 +45,8 @@ This project quantifies both — and builds a **Rider Experience Score** that re
 - **Longwood Medical stays hot all day** (10–13% bunching), a persistent choke-point invisible to OTP.
 - **1 Kenmore delay → 32 downstream stations** affected within 5 hours (Aug 10, 2022).
 - **At busy stations, a 25-min headway gap → 67s dwell time** (+40% vs normal), a direct crowding signal.
+- **5 super-spreader stations drive 19.7% of all cascade events** — Kenmore, Copley, Government Center, Beaconsfield, Hynes Convention Center (identified via Granger causality out-degree).
+- **Gradient Boosting cascade model** predicts evening rush risk at Kenmore peaks at P=0.93 (16–19h); structural intervention backtest shows isolating top-5 stations prevents **23,556 cascade events** across Green B/C/D/E and Blue lines over 17 months.
 
 ---
 
@@ -68,6 +71,8 @@ MBTA/
 │   └── assets/
 │       ├── network_map.html     # Interactive network graph (pyvis)
 │       ├── station_risk_map.html# Folium choropleth map
+│       ├── risk_heatmap.json    # ML cascade risk by station × hour
+│       ├── backtest_data.json   # Structural intervention backtest results
 │       └── charts/              # ML model charts
 ├── notebooks/
 │   ├── 01_data_acquisition.ipynb
@@ -77,6 +82,10 @@ MBTA/
 │   ├── 05_cascade_analysis.ipynb
 │   ├── 06_synthesis.ipynb
 │   └── 07_cascade_prediction.ipynb
+├── scripts/
+│   ├── make_spreader_map.py     # Folium super-spreader map generator
+│   ├── make_risk_heatmap.py     # ML cascade risk heatmap (Section 08 Step 0)
+│   └── backtest_intervention.py # Structural intervention backtest
 ├── requirements.txt
 └── CLAUDE.md                    # Project specification
 ```
@@ -87,7 +96,8 @@ MBTA/
 
 All data from **[MBTA LAMP Public Data](https://performancedata.mbta.com)** — no API key required.
 
-- **Subway On-Time Performance v1** — 29 months, Jan 2024 – May 2026
+- **Subway On-Time Performance v1** — Jan 2024 – May 2026 (Sections 01–07)
+- **ML model backtest** — Jan 2025 – May 2026 (17 months, Section 08)
 - **GTFS Static** — stops, routes, trips metadata
 - Lines: Red, Orange, Blue, Green (B/C/D/E branches)
 
@@ -107,6 +117,11 @@ pip install -r requirements.txt
 # Run notebooks in order
 jupyter lab
 # 01 → 02 → 03 → 04 → 05 → 06 → 07
+
+# Regenerate Section 08 assets
+python scripts/make_risk_heatmap.py       # cascade risk heatmap
+python scripts/backtest_intervention.py   # intervention backtest
+python scripts/make_spreader_map.py       # super-spreader map
 ```
 
 ---
@@ -118,7 +133,7 @@ jupyter lab
 | Data processing | `pandas`, `pyarrow` |
 | Network analysis | `networkx`, `pyvis` |
 | Statistical analysis | `scipy`, `statsmodels` (Granger causality) |
-| Machine learning | `scikit-learn` (Isolation Forest, Logistic Regression) |
+| Machine learning | `scikit-learn` (Gradient Boosting, Isolation Forest) |
 | Visualization | `plotly`, `folium` |
 | Dashboard | Static HTML + Plotly.js |
 

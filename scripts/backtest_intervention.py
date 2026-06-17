@@ -216,25 +216,34 @@ for line in sorted(feat['line'].unique()):
     sub_mask = feat['line'].eq(line) & feat['pred_actual'].eq(1) & feat['cascade'].eq(1)
     n_total = sub_mask.sum()
     if n_total == 0: continue
-    n_prev = (sub_mask & feat['pred_structural'].eq(0)).sum()
+    prev_mask = sub_mask & feat['pred_structural'].eq(0)
+    n_prev = prev_mask.sum()
+    # Count unique service days with at least one prevented cascade event
+    n_days_total   = feat[sub_mask]['service_date'].nunique()
+    n_days_prev    = feat[prev_mask]['service_date'].nunique()
     line_breakdown.append({
         'line': line.replace(' Line','').replace('Green Line ','Green '),
         'total': int(n_total),
         'preventable': int(n_prev),
         'unavoidable': int(n_total - n_prev),
-        'pct_preventable': round(n_prev/n_total*100, 1)
+        'pct_preventable': round(n_prev/n_total*100, 1),
+        'days_total': int(n_days_total),
+        'days_prevented': int(n_days_prev),
     })
-    print(f'  {line:<20} total={n_total:4d}  structural_prevented={n_prev:4d}  ({n_prev/n_total*100:.0f}%)')
+    print(f'  {line:<20} total={n_total:4d}  prevented={n_prev:4d} ({n_prev/n_total*100:.0f}%)  days_prevented={n_days_prev}')
 
 # ── 6. ROI estimate ────────────────────────────────────────────────────────────
-months_in_test        = len(TEST_YM)
-annualise             = 12 / months_in_test
-avg_stations_cascade  = 8
-avg_delay_min         = 18
-annual_prevented      = round(int(n_all_prevented) * annualise)
-station_hours_saved   = round(annual_prevented * avg_stations_cascade * avg_delay_min / 60)
-print(f'\nAnnual prevented (structural): ~{annual_prevented}')
-print(f'Station-hours saved/year     : ~{station_hours_saved:,}')
+months_in_test   = len(TEST_YM)
+annualise        = 12 / months_in_test
+annual_prevented = round(int(n_all_prevented) * annualise)
+
+# Days-based metric: unique service days (system-wide) with at least one prevented cascade
+prevented_mask   = all_cascade_mask & feat['pred_structural'].eq(0)
+n_days_sys_prev  = feat[prevented_mask]['service_date'].nunique()
+annual_days_prev = round(n_days_sys_prev * annualise)
+print(f'\nAnnual prevented (events):       ~{annual_prevented}')
+print(f'Service days prevented (17 mo):  {n_days_sys_prev}')
+print(f'Service days prevented (annual): ~{annual_days_prev}')
 
 # ── 7. Case study: worst day before/after ─────────────────────────────────────
 agg      = pd.read_parquet(PROC_DIR / 'aggregate_full.parquet')
